@@ -1,0 +1,22 @@
+
+// build hint :  protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative terragpio.proto
+
+syntax = "proto3";
+
+option go_package = "terragpio/terragpio";
+
+package terragpio;
+
+service setgpio {
+    rpc SetPWM(PWMRequest) returns(PWMResponse) {}
+}
+
+message PWMRequest {
+    string pin = 1; // expect the pin to be expressed in terms of GPIO standard (i.e. GPIO6) 
+    string dutycycle = 2; // format is "nn%" where nn is 00 - 100
+    string frequency = 3; // format is "nM" where is Mega Hertz 
+}
+
+message PWMResponse {
+    bool verified = 1; 
+}
