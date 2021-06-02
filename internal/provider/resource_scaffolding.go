@@ -3,11 +3,13 @@ package provider
 import (
 	"context"
 
+	pb "github.com/andybaran/fictional-goggles/terragpio"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceScaffolding() *schema.Resource {
+func resourcePWM() *schema.Resource {
 	return &schema.Resource{
 		// This description is used by the documentation generator and the language server.
 		Description: "Sample resource in the Terraform provider scaffolding.",
@@ -18,11 +20,23 @@ func resourceScaffolding() *schema.Resource {
 		DeleteContext: resourceScaffoldingDelete,
 
 		Schema: map[string]*schema.Schema{
-			"sample_attribute": {
+			"Pin": {
 				// This description is used by the documentation generator and the language server.
-				Description: "Sample attribute.",
+				Description: "GPIO Pin",
 				Type:        schema.TypeString,
-				Optional:    true,
+				Optional:    false,
+			},
+			"Dutycycle": {
+				// This description is used by the documentation generator and the language server.
+				Description: "Duty cycle",
+				Type:        schema.TypeString,
+				Optional:    false,
+			},
+			"Frequency": {
+				// This description is used by the documentation generator and the language server.
+				Description: "Frequency",
+				Type:        schema.TypeString,
+				Optional:    false,
 			},
 		},
 	}

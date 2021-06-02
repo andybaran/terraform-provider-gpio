@@ -2,9 +2,11 @@ package provider
 
 import (
 	"context"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"google.golang.org/grpc"
 )
 
 func init() {
@@ -26,6 +28,13 @@ func init() {
 func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
+			Schema: map[string]*schema.Schema{
+				"server-address": &schema.Schema{
+					Type:        schema.TypeString,
+					Optional:    false,
+					DefaultFunc: schema.EnvDefaultFunc("GPIOADDR", nil),
+				},
+			},
 			DataSourcesMap: map[string]*schema.Resource{
 				"scaffolding_data_source": dataSourceScaffolding(),
 			},
@@ -51,6 +60,21 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		// Setup a User-Agent for your API client (replace the provider name for yours):
 		// userAgent := p.UserAgent("terraform-provider-scaffolding", version)
 		// TODO: myClient.UserAgent = userAgent
+
+		serverAddr := p.
+
+
+		var diags diag.Diagnostics
+
+		var opts []grpc.DialOption
+		opts = append(opts, grpc.WithInsecure()) //not ready to worry about security just yet
+		opts = append(opts, grpc.WithBlock())    //we do this b/c we just want to fail immediately if we can't connect to the server https://pkg.go.dev/google.golang.org/grpc@v1.32.0?utm_source=gopls#WithBlock
+
+		conn, err := grpc.Dial(*serverAddr)
+		if err != nil {
+			log.Fatalf("failed to dial: %v", err)
+		}
+		defer conn.Close()
 
 		return &apiClient{}, nil
 	}
