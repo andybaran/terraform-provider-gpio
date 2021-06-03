@@ -12,9 +12,9 @@ service setgpio {
 }
 
 message PWMRequest {
-    string pin = 1; // expect the pin to be expressed in terms of GPIO standard (i.e. GPIO6) 
-    string dutycycle = 2; // format is "nn%" where nn is 00 - 100
-    string frequency = 3; // format is "nM" where is Mega Hertz 
+    string pin = 1; // GPIO to be configured for PWM in GPIO standard format (i.e. GPIO6)
+    string dutycycle = 2; // Duty cycle for the PWM pin being configured as "nn%" where nn is 00 - 100
+    string frequency = 3; // Frequency of the signal in the format "nM" where "n" is the numerical value and "M" is Megahertz 
 }
 
 message PWMResponse {

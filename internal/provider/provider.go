@@ -39,7 +39,7 @@ func New(version string) func() *schema.Provider {
 				"scaffolding_data_source": dataSourceScaffolding(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"scaffolding_resource": resourceScaffolding(),
+				"PWM": resourcePWM(),
 			},
 		}
 
@@ -61,8 +61,7 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		// userAgent := p.UserAgent("terraform-provider-scaffolding", version)
 		// TODO: myClient.UserAgent = userAgent
 
-		serverAddr := p.
-
+		serverAddr := p.Get("server-address").(string)
 
 		var diags diag.Diagnostics
 
@@ -70,12 +69,12 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		opts = append(opts, grpc.WithInsecure()) //not ready to worry about security just yet
 		opts = append(opts, grpc.WithBlock())    //we do this b/c we just want to fail immediately if we can't connect to the server https://pkg.go.dev/google.golang.org/grpc@v1.32.0?utm_source=gopls#WithBlock
 
-		conn, err := grpc.Dial(*serverAddr)
+		apiClient, err := grpc.Dial(*serverAddr)
 		if err != nil {
 			log.Fatalf("failed to dial: %v", err)
 		}
-		defer conn.Close()
+		defer apiClient.Close.Close()
 
-		return &apiClient{}, nil
+		return &apiClient, nil
 	}
 }
