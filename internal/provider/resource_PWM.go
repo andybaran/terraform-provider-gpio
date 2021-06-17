@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 
+	"github.com/andybaran/fictional-goggles/terragpio/gpioclient"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -49,6 +50,14 @@ func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 
 	idFromAPI := "my-id"
 	d.SetId(idFromAPI)
+
+	var pin = "GPIO12"
+	var dutycycle = "100%"
+	var freq = "25000"
+
+	client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
+
+	//	client.MyClient.SetPWM(client.MyClient(SetPWMArgs{Pin == pin, DutyCycle == dutycycle, Freq == freq}))
 
 	return diag.Errorf("not implemented")
 }
