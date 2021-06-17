@@ -7,6 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/grpc"
+
+	"github.com/andybaran/fictional-goggles/terragpio/gpioclient"
 )
 
 func init() {
@@ -29,17 +31,17 @@ func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
 			Schema: map[string]*schema.Schema{
-				"server-address": &schema.Schema{
+				"serverAddr": &schema.Schema{
 					Type:        schema.TypeString,
-					Optional:    false,
-					DefaultFunc: schema.EnvDefaultFunc("GPIOADDR", nil),
+					Required:    true,
+					DefaultFunc: schema.EnvDefaultFunc("rpiaddr", nil),
 				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{
 				"scaffolding_data_source": dataSourceScaffolding(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"PWM": resourcePWM(),
+				"pwm": resourcePWM(),
 			},
 		}
 
@@ -53,6 +55,7 @@ type apiClient struct {
 	// Add whatever fields, client or connection info, etc. here
 	// you would need to setup to communicate with the upstream
 	// API.
+	ServerAddr string
 }
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
@@ -61,7 +64,12 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		// userAgent := p.UserAgent("terraform-provider-scaffolding", version)
 		// TODO: myClient.UserAgent = userAgent
 
-		serverAddr := p.Get("server-address").(string)
+		//var apiSettings apiClient
+		//apiSettings.ServerAddr = &p.
+
+		userAgent := p.UserAgent("terraform-provider-gpio", "1")
+
+		myClient, err := gpioclient.NewClient(p.Schema["ServerAddr"])
 
 		var diags diag.Diagnostics
 

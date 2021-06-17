@@ -23,19 +23,19 @@ func resourcePWM() *schema.Resource {
 				// GPIO to be configured for PWM in GPIO standard format (i.e. GPIO6)
 				Description: "GPIO Pin",
 				Type:        schema.TypeString,
-				Optional:    false,
+				Required:    true,
 			},
 			"Dutycycle": {
 				// Duty cycle for the PWM pin being configured as "nn%" where nn is 00 - 100
 				Description: "Duty cycle",
 				Type:        schema.TypeString,
-				Optional:    false,
+				Required:    true,
 			},
 			"Frequency": {
 				// Frequency of the signal in the format "nM" where "n" is the numerical value and "M" is Megahertz
 				Description: "Frequency",
 				Type:        schema.TypeString,
-				Optional:    false,
+				Required:    true,
 			},
 		},
 	}
