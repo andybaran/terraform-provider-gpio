@@ -40,7 +40,7 @@ func resourceBME280Create(ctx context.Context, d *schema.ResourceData, meta inte
 
 	client := meta.(*apiClient)
 
-	idFromAPI := "my-id"
+	idFromAPI := d.
 	d.SetId(idFromAPI)
 
 	var I2CBus = "1"
