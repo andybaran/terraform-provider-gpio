@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 
-	"github.com/andybaran/fictional-goggles/terragpio/gpioclient"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -46,7 +45,7 @@ func resourceBME280Create(ctx context.Context, d *schema.ResourceData, meta inte
 	var I2CBus = "1"
 	var I2CAddr = "0x77"
 
-	client.MyClient.SetBME280(gpioclient.SetBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddr})
+	client.MyClient.setBME280(gpioclient.setBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddr})
 
 	//	client.MyClient.SetPWM(client.MyClient(SetPWMArgs{Pin == pin, DutyCycle == dutycycle, Freq == freq}))
 

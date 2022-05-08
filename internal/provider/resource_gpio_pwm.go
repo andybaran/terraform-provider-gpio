@@ -43,21 +43,19 @@ func resourcePWM() *schema.Resource {
 }
 
 func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
 
 	client := meta.(*apiClient)
 
-	idFromAPI := "my-id"
-	d.SetId(idFromAPI)
+	//idFromAPI := "my-id"
+	//d.SetId(idFromAPI)
 
 	var pin = "GPIO12"
 	var dutycycle = "100%"
 	var freq = "25000"
 
-	client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
+	resp := client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
 
-	//	client.MyClient.SetPWM(client.MyClient(SetPWMArgs{Pin == pin, DutyCycle == dutycycle, Freq == freq}))
+	d.SetId(resp.pinNumber())
 
 	return diag.Errorf("not implemented")
 }
