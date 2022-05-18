@@ -41,7 +41,7 @@ func New(version string) func() *schema.Provider {
 				"scaffolding_data_source": dataSourceScaffolding(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"pwm": resourcePWM(),
+				"gpio_pwm": resource_gpio_pwm(),
 				"bme280" : resourceBME280(),
 			},
 		}

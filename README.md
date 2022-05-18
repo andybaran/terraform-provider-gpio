@@ -1,62 +1,81 @@
-# Terraform Provider Scaffolding
+How will provider be used?
 
-This repository is a *template* for a [Terraform](https://www.terraform.io) provider. It is intended as a starting point for creating Terraform providers, containing:
+Goal is to setup a temperature probe and a fan that reacts to it.
 
- - A resource, and a data source (`internal/provider/`),
- - Examples (`examples/`) and generated documentation (`docs/`),
- - Miscellaneous meta files.
- 
-These files contain boilerplate code that you will need to edit to create your own Terraform provider. A full guide to creating Terraform providers can be found at [Writing Custom Providers](https://www.terraform.io/docs/extend/writing-custom-providers.html).
+- fan = resource_pwm
+- temp = resource_BME280
+- reaction = resource_InputTemperature_OutputFan
 
-Please see the [GitHub template repository documentation](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for how to create a new repository from this template on GitHub.
+# gpio_pwm
+Terraform resource id (used internally) is equal to the pin attribute.
 
-Once you've written your provider, you'll want to [publish it on the Terraform Registry](https://www.terraform.io/docs/registry/providers/publishing.html) so that others can use it.
+## Attributes
+- pin
+- dutycycle
+- frequency
 
-
-## Requirements
-
--	[Terraform](https://www.terraform.io/downloads.html) >= 0.13.x
--	[Go](https://golang.org/doc/install) >= 1.15
-
-## Building The Provider
-
-1. Clone the repository
-1. Enter the repository directory
-1. Build the provider using the Go `install` command: 
-```sh
-$ go install
+## Example Usage
+TODO: In provider convert frequency to a string before being sent to server.
+TODO: Convert dutycycle to a uint64 in the server and then here
+```hcl
+resource "gpio_pwm" "my_fan" {
+    pin = "GPIO13"
+    dutycycle = "10%"
+    frequency = 25000
+} 
 ```
 
-## Adding Dependencies
+# gpio_bme280
+Terraform resource id (used internally) is concantenation of I2C Bus and device address of the connected BME280 device.
 
-This provider uses [Go modules](https://github.com/golang/go/wiki/Modules).
-Please see the Go documentation for the most up to date information about using Go modules.
+## Attributes
+- i2c_bus
+- i2c_addr
 
-To add a new dependency `github.com/author/dependency` to your Terraform provider:
+## Example Usage
 
+```hcl
+resource "gpio_bme280" "my_bme280" {
+    i2c_bus = "1"
+    i2c_addr = "0x77"
+} 
 ```
-go get github.com/author/dependency
-go mod tidy
-```
 
-Then commit the changes to `go.mod` and `go.sum`.
+# gpio_input_temperature_output_fan
+Terraform resource id (used internally) is concatentation of id's from resource_bme280 (input) and resource_pwm (output).  An error is thrown if you try to setup more than one of these with the same id since it would be targeting the same devices.
 
-## Using the provider
+The fans speed is determined by it's duty cycle.  In order to set it's duty cycle in relation to the measured temperature we need to plot it on a graph whose X axis is the range of temperatureMin and temperatureMax and Y axis is dutycycleMin and dutyCycleMax.
 
-Fill this in for each provider
+## Attributes
+- time_interval : int specifying how often (in seconds) to check the temperature and adjust the fan dutycycle (ie: speed)
+- bme280_id : the BME280 device to use (this should be from an attribute of resource_bme280)
+- temp_max : the max (in celsius) temperature to use for dutycycle calculation
+- temp_min : the min (in celsius) temperature to use for dutycycle calculation
+- fan_id : the pwm based fan device to use (this should be from an attribute of resource_pwm)
+- duty_max : the max (in percent) dutycycle to use
+- duty_min : the min (in percent) dutycycle to use
 
-## Developing the Provider
+## Example Usage
 
-If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (see [Requirements](#requirements) above).
+```hcl
+resource "gpio_pwm" "my_fan" {
+    pin = "GPIO13"
+    dutycycle = "10%"
+    frequency = 25000
+} 
 
-To compile the provider, run `go install`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
+resource "gpio_bme280" "my_bme280" {
+    i2c_bus = "1"
+    i2c_addr = "0x77"
+} 
 
-To generate or update documentation, run `go generate`.
-
-In order to run the full suite of Acceptance tests, run `make testacc`.
-
-*Note:* Acceptance tests create real resources, and often cost money to run.
-
-```sh
-$ make testacc
+resource "gpio_input_temperature_output_fan" "my_fan_controller" {
+    time_interval = 5
+    bme280_id = gpio_bme280.my_bme280.id 
+    temp_max  = 100
+    temp_min = 15
+    fan_id = gpio_pwm.my_fan.id
+    duty_max = 100
+    duty_min = 10
+}
 ```
