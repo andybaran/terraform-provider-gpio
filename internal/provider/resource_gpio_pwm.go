@@ -53,9 +53,9 @@ func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 	var dutycycle = "100%"
 	var freq = "25000"
 
-	resp := client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
+	resp, err := client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
 
-	d.SetId(resp.PinNumber())
+	d.SetId(resp.PinNumber)
 
 	return diag.Errorf("not implemented")
 }
