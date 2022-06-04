@@ -39,17 +39,18 @@ func resourceBME280Create(ctx context.Context, d *schema.ResourceData, meta inte
 
 	client := meta.(*apiClient)
 
-	idFromAPI := d.
-	d.SetId(idFromAPI)
-
 	var I2CBus = "1"
 	var I2CAddr = "0x77"
 
-	client.MyClient.setBME280(gpioclient.setBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddr})
+	resp, err = client.MyClient.setBME280(gpioclient.setBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddr})
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
-	//	client.MyClient.SetPWM(client.MyClient(SetPWMArgs{Pin == pin, DutyCycle == dutycycle, Freq == freq}))
+	d.SetId(resp.PinNumber)
 
-	return diag.Errorf("not implemented")
+	return diag.Errorf("Not really an error")
+
 }
 
 func resourceBME280Read(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -66,9 +67,28 @@ func resourceBME280Update(ctx context.Context, d *schema.ResourceData, meta inte
 	return diag.Errorf("not implemented")
 }
 
+/*TODO: This warrants more investigation into the docs. How do I tear down a connection on the I2CBus
+
+*/
 func resourceBME280Delete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	// use the meta value to retrieve your client from the provider configure method
 	// client := meta.(*apiClient)
 
-	return diag.Errorf("not implemented")
+	client := meta.(*apiClient)
+
+	//idFromAPI := "my-id"
+	//d.SetId(idFromAPI)
+
+	var pin = "GPIO12"
+	var dutycycle = "0%"
+	var freq = "0"
+
+	resp, err := client.MyClient.gpioclient.setBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddr})
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(resp.PinNumber)
+
+	return diag.Errorf("Not really an error")
 }

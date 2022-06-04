@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// TODO: This really only be allowed to be set to proper PWM pins and give a warning if pin(s) other than 13 are used
 // TODO: Lean how to use Diagnostics so I can return a Diagnostics of type INFO or equivalent
 func resourcePWM() *schema.Resource {
 	return &schema.Resource{
