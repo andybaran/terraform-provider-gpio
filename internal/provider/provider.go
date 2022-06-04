@@ -42,7 +42,7 @@ func New(version string) func() *schema.Provider {
 			},
 			ResourcesMap: map[string]*schema.Resource{
 				"gpio_pwm": resource_gpio_pwm(),
-				"bme280" : resourceBME280(),
+				"bme280":   resourceBME280(),
 			},
 		}
 

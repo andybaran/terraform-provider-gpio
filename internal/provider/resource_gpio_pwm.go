@@ -9,6 +9,7 @@ import (
 )
 
 // TODO: This really only be allowed to be set to proper PWM pins and give a warning if pin(s) other than 13 are used
+// TODO: Lean how to use Diagnostics so I can return a Diagnostics of type INFO or equivalent
 func resourcePWM() *schema.Resource {
 	return &schema.Resource{
 		// This description is used by the documentation generator and the language server.
@@ -54,10 +55,13 @@ func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 	var freq = "25000"
 
 	resp, err := client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	d.SetId(resp.PinNumber)
 
-	return diag.Errorf("not implemented")
+	return diag.Errorf("Not really an error")
 }
 
 func resourcePWMRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -74,9 +78,27 @@ func resourcePWMUpdate(ctx context.Context, d *schema.ResourceData, meta interfa
 	return diag.Errorf("not implemented")
 }
 
+/*TODO: There has to be a better way to do this than just setting values to zero.
+Seems like I should be breaking some kind of connection instead, pulling the pin down maybe?  This way is we haven't really deleted the
+resource, the values just happen to be set to 0.
+*/
 func resourcePWMDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
 
-	return diag.Errorf("not implemented")
+	client := meta.(*apiClient)
+
+	//idFromAPI := "my-id"
+	//d.SetId(idFromAPI)
+
+	var pin = "GPIO12"
+	var dutycycle = "0%"
+	var freq = "0"
+
+	resp, err := client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(resp.PinNumber)
+
+	return diag.Errorf("Not really an error")
 }
