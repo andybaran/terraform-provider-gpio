@@ -14,7 +14,7 @@ func resourceBME280() *schema.Resource {
 
 		CreateContext: resourceBME280Create,
 		ReadContext:   resourceBME280Read,
-		UpdateContext: resourceBME280Update,
+		UpdateContext: resourceBME280Create, // Functionally an Update is the same as a Create
 		DeleteContext: resourceBME280Delete,
 
 		Schema: map[string]*schema.Schema{
@@ -34,15 +34,13 @@ func resourceBME280() *schema.Resource {
 }
 
 func resourceBME280Create(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
 
 	client := meta.(*apiClient)
 
-	var I2CBus = "1"
-	var I2CAddr = "0x77"
+	var I2CBus = d.Get("I2CBus").(string)   //"1"
+	var I2CAddr = d.Get("I2CAddr").(string) //"0x77"
 
-	resp, err = client.MyClient.setBME280(gpioclient.setBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddr})
+	resp, err = client.MyClient.SetBME280(gpioclient.setBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddr})
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -54,41 +52,12 @@ func resourceBME280Create(ctx context.Context, d *schema.ResourceData, meta inte
 }
 
 func resourceBME280Read(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
-
-	return diag.Errorf("not implemented")
-}
-
-func resourceBME280Update(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
-
 	return diag.Errorf("not implemented")
 }
 
 /*TODO: This warrants more investigation into the docs. How do I tear down a connection on the I2CBus
+ */
 
-*/
 func resourceBME280Delete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
-
-	client := meta.(*apiClient)
-
-	//idFromAPI := "my-id"
-	//d.SetId(idFromAPI)
-
-	var pin = "GPIO12"
-	var dutycycle = "0%"
-	var freq = "0"
-
-	resp, err := client.MyClient.gpioclient.setBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddr})
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	d.SetId(resp.PinNumber)
-
-	return diag.Errorf("Not really an error")
+	return diag.Errorf("not implemented")
 }
