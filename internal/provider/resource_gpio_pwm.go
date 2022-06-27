@@ -16,7 +16,7 @@ func resourcePWM() *schema.Resource {
 
 		CreateContext: resourcePWMCreate,
 		ReadContext:   resourcePWMRead,
-		UpdateContext: resourcePWMUpdate,
+		UpdateContext: resourcePWMCreate, // Functionally an Update is the same as a Create
 		DeleteContext: resourcePWMDelete,
 
 		Schema: map[string]*schema.Schema{
@@ -46,12 +46,9 @@ func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 
 	client := meta.(*apiClient)
 
-	//idFromAPI := "my-id"
-	//d.SetId(idFromAPI)
-
-	var pin = "GPIO12"
-	var dutycycle = "100%"
-	var freq = "25000"
+	var pin = d.Get("Pin").(string)             //"GPIO12"
+	var dutycycle = d.Get("Dutycycle").(string) //"100%"
+	var freq = d.Get("Frequency").(string)      //"25000"
 
 	resp, err := client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
 	if err != nil {
@@ -70,25 +67,15 @@ func resourcePWMRead(ctx context.Context, d *schema.ResourceData, meta interface
 	return diag.Errorf("not implemented")
 }
 
-func resourcePWMUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
-
-	return diag.Errorf("not implemented")
-}
-
 /*TODO: There has to be a better way to do this than just setting values to zero.
-Seems like I should be breaking some kind of connection instead, pulling the pin down maybe?  This way is we haven't really deleted the
+Seems like I should be breaking some kind of connection instead, pulling the pin down maybe?  Currently we haven't really deleted the
 resource, the values just happen to be set to 0.
 */
 func resourcePWMDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 
 	client := meta.(*apiClient)
 
-	//idFromAPI := "my-id"
-	//d.SetId(idFromAPI)
-
-	var pin = "GPIO12"
+	var pin = d.Get("Pin").(string) //"GPIO12"
 	var dutycycle = "0%"
 	var freq = "0"
 
