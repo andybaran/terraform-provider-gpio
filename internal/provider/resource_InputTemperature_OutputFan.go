@@ -24,6 +24,11 @@ func resourceInputTemperature_OutputFan() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 			},
+			"bme280DevicePin": {
+				Description: "BME280 device to read temp from",
+				Type:        schema.TypeString,
+				Required:    true,
+			},
 			"temperatureMax": {
 				Description: "Max temperature (for calculating curve)",
 				Type:        schema.TypeString,
@@ -31,6 +36,11 @@ func resourceInputTemperature_OutputFan() *schema.Resource {
 			},
 			"temperatureMin": {
 				Description: "Min temperature (for calculating curve)",
+				Type:        schema.TypeString,
+				Required:    true,
+			},
+			"fanDevice": {
+				Description: "fanDevice",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
@@ -56,6 +66,7 @@ func resourceITemp_OFan_Create(ctx context.Context, d *schema.ResourceData, meta
 	d.SetId(idFromAPI)
 
 	var timeInterval = d.Get("timeInterval").(uint64)
+	var bme280DevicePin = d.Get("bme280DevicePin").(string)
 	var temperatureMax = d.Get("temperatureMax").(uint64)
 	var temperatureMin = d.Get("temperatureMin").(uint64)
 	var dutyCycleMax = d.Get("dutyCycleMax").(uint64)
@@ -63,8 +74,10 @@ func resourceITemp_OFan_Create(ctx context.Context, d *schema.ResourceData, meta
 
 	client.MyClient.StartFanController(gpioclient.StartFanControllerArgs{
 		timeInterval:   timeInterval,
+		BME280Device:   bme280DevicePin,
 		temperatureMax: temperatureMax,
 		temperatureMin: temperatureMin,
+		fanDevice:      fanDevice,
 		dutyCycleMax:   dutyCycleMax,
 		dutyCylceMin:   dutyCycleMin})
 
