@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// TODO: This really only be allowed to be set to proper PWM pins and give a warning if pin(s) other than 13 are used
+
 func resourceInputTemperature_OutputFan() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource to control PWM Pins",

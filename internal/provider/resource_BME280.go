@@ -23,11 +23,28 @@ func resourceBME280() *schema.Resource {
 				Description: "I2C Bus",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"I2CAddr": {
 				Description: "BME280 I2C address on bus",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
+			},
+			"Temperature": {
+				Description: "Temperature sensed at time in 'Last_Sensed'",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
+			"Humidity": {
+				Description: "Humidity sensed at time in 'Last_Sensed'",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
+			"Pressure": {
+				Description: "Humidity sensed at time in 'Last_Sensed'",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}
@@ -51,6 +68,7 @@ func resourceBME280Create(ctx context.Context, d *schema.ResourceData, meta inte
 
 }
 
+//TODO: To really implement this I can create computed fields for temp, barometric pressure, humidity and the time at which they were read
 func resourceBME280Read(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	return diag.Errorf("not implemented")
 }

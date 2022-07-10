@@ -46,9 +46,9 @@ func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 
 	client := meta.(*apiClient)
 
-	var pin = d.Get("Pin").(string)             //"GPIO12"
-	var dutycycle = d.Get("Dutycycle").(string) //"100%"
-	var freq = d.Get("Frequency").(string)      //"25000"
+	var pin = d.Get("Pin").(string)             //Example: "GPIO12"
+	var dutycycle = d.Get("Dutycycle").(string) //Example: "100%"
+	var freq = d.Get("Frequency").(string)      //Example: "25000"
 
 	resp, err := client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
 	if err != nil {
@@ -60,22 +60,18 @@ func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 	return diag.Errorf("Not really an error")
 }
 
+//TODO: create computed values that read a dutycycle and frequency at a particular time.
 func resourcePWMRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
 
+	
 	return diag.Errorf("not implemented")
 }
 
-/*TODO: There has to be a better way to do this than just setting values to zero.
-Seems like I should be breaking some kind of connection instead, pulling the pin down maybe?  Currently we haven't really deleted the
-resource, the values just happen to be set to 0.
-*/
 func resourcePWMDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 
 	client := meta.(*apiClient)
 
-	var pin = d.Get("Pin").(string) //"GPIO12"
+	var pin = d.Get("Pin").(string) //Example: "GPIO12"
 	var dutycycle = "0%"
 	var freq = "0"
 
