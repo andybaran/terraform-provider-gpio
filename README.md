@@ -15,8 +15,11 @@ Terraform resource id (used internally) is equal to the pin attribute.
 - frequency
 
 ## Example Usage
+
 TODO: In provider convert frequency to a string before being sent to server.
+
 TODO: Convert dutycycle to a uint64 in the server and then here
+
 ```hcl
 resource "gpio_pwm" "my_fan" {
     pin = "GPIO13"
