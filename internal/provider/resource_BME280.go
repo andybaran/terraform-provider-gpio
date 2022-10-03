@@ -9,7 +9,6 @@ import (
 
 func resourceBME280() *schema.Resource {
 	return &schema.Resource{
-		// This description is used by the documentation generator and the language server.
 		Description: "Resource to setup BME280 i2c sensor",
 
 		CreateContext: resourceBME280Create,
@@ -68,13 +67,9 @@ func resourceBME280Create(ctx context.Context, d *schema.ResourceData, meta inte
 
 }
 
-//TODO: To really implement this I can create computed fields for temp, barometric pressure, humidity and the time at which they were read
 func resourceBME280Read(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	return diag.Errorf("not implemented")
 }
-
-/*TODO: This warrants more investigation into the docs. How do I tear down a connection on the I2CBus
- */
 
 func resourceBME280Delete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	return diag.Errorf("not implemented")

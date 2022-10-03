@@ -43,6 +43,5 @@ message FanControllerRequest {
 }
 
 message FanControllerResponse {
-  //ToDo: Read more about GRPC status
-  // https://cloud.google.com/apis/design/errors#error_model  
+
 }

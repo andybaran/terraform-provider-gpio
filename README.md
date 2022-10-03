@@ -1,6 +1,6 @@
 How will provider be used?
 
-Goal is to setup a temperature probe and a fan that reacts to it.
+We setup a temperature probe and a fan that reacts to it.
 
 - fan = resource_pwm
 - temp = resource_BME280
@@ -15,10 +15,6 @@ Terraform resource id (used internally) is equal to the pin attribute.
 - frequency
 
 ## Example Usage
-
-TODO: In provider convert frequency to a string before being sent to server.
-
-TODO: Convert dutycycle to a uint64 in the server and then here
 
 ```hcl
 resource "gpio_pwm" "my_fan" {

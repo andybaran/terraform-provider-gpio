@@ -60,10 +60,8 @@ func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 	return diag.Errorf("Not really an error")
 }
 
-//TODO: create computed values that read a dutycycle and frequency at a particular time.
 func resourcePWMRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 
-	
 	return diag.Errorf("not implemented")
 }
 
