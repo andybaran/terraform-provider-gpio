@@ -12,10 +12,10 @@ func resource_input_temperature_output_fan() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource to control PWM Pins",
 
-		CreateContext: resourceITemp_OFan_Create,
-		ReadContext:   resourceITemp_OFan_Read,
-		UpdateContext: resourceITemp_OFan_Update,
-		DeleteContext: resourceITemp_OFan_Delete,
+		CreateContext: resource_input_temperature_output_fan_Create,
+		ReadContext:   resource_input_temperature_output_fan_Read,
+		UpdateContext: resource_input_temperature_output_fan_Update,
+		DeleteContext: resource_input_temperature_output_fan_Delete,
 
 		Schema: map[string]*schema.Schema{
 			"timeInterval": {
@@ -57,7 +57,7 @@ func resource_input_temperature_output_fan() *schema.Resource {
 	}
 }
 
-func resourceITemp_OFan_Create(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resource_input_temperature_output_fan_Create(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 
 	client := meta.(*apiClient)
 
@@ -70,36 +70,37 @@ func resourceITemp_OFan_Create(ctx context.Context, d *schema.ResourceData, meta
 	var temperatureMin = d.Get("temperatureMin").(uint64)
 	var dutyCycleMax = d.Get("dutyCycleMax").(uint64)
 	var dutyCycleMin = d.Get("dutyCycleMin").(uint64)
+	var fanDevice = d.Get("fanDevice").(string)
 
 	client.MyClient.StartFanController(gpioclient.StartFanControllerArgs{
-		TimeInterval:   timeInterval,
-		BME280Device:   bme280DevicePin,
-		TemperatureMax: temperatureMax,
-		TemperatureMin: temperatureMin,
-		FanDevice:      fanDevice,
-		DutyCycleMax:   dutyCycleMax,
-		DutyCylceMin:   dutyCycleMin})
+		TimeInterval:    timeInterval,
+		BME280DevicePin: bme280DevicePin,
+		TemperatureMax:  temperatureMax,
+		TemperatureMin:  temperatureMin,
+		FanDevice:       fanDevice,
+		DutyCycleMax:    dutyCycleMax,
+		DutyCylceMin:    dutyCycleMin})
 
 	//	client.MyClient.SetPWM(client.MyClient(SetPWMArgs{Pin == pin, DutyCycle == dutycycle, Freq == freq}))
 
 	return diag.Errorf("not implemented")
 }
 
-func resourceITemp_OFan_Read(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resource_input_temperature_output_fan_Read(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	// use the meta value to retrieve your client from the provider configure method
 	// client := meta.(*apiClient)
 
 	return diag.Errorf("not implemented")
 }
 
-func resourceITemp_OFan_Update(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resource_input_temperature_output_fan_Update(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	// use the meta value to retrieve your client from the provider configure method
 	// client := meta.(*apiClient)
 
 	return diag.Errorf("not implemented")
 }
 
-func resourceITemp_OFan_Delete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resource_input_temperature_output_fan_Delete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	// use the meta value to retrieve your client from the provider configure method
 	// client := meta.(*apiClient)
 

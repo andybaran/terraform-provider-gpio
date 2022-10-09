@@ -187,8 +187,8 @@ github.com/agext/levenshtein v1.2.3/go.mod h1:JEDfjyjHDjOF/1e4FlBE/PkbqA9OfWu2ki
 github.com/agl/ed25519 v0.0.0-20170116200512-5312a6153412/go.mod h1:WPjqKcmVOxf0XSf3YxCJs6N6AOSrOx3obionmG7T0y0=
 github.com/alcortesm/tgz v0.0.0-20161220082320-9c5fe88206d7/go.mod h1:6zEj6s6u/ghQa61ZWa/C2Aw3RkjiTBOix7dkqa1VLIs=
 github.com/andybalholm/crlf v0.0.0-20171020200849-670099aa064f/go.mod h1:k8feO4+kXDxro6ErPXBRTJ/ro2mf0SsFG8s7doP9kJE=
-github.com/andybaran/terragpio v0.0.0-20221009162400-dd3d502a9453 h1:+wSp50I3mnQpVNBfyXtQdV2rk3NoCzWrTL8kLX78C1A=
-github.com/andybaran/terragpio v0.0.0-20221009162400-dd3d502a9453/go.mod h1:mB0PqKoEqBNtn6kxlvjM/J+NXjHke6ztNSF0JrAtsoU=
+github.com/andybaran/terragpio v0.0.0-20221009165119-08e6815155c9 h1:GpJUmDa2IREH+D9nj8lmXlpV/uXD4vWNhGPE1gVvsgU=
+github.com/andybaran/terragpio v0.0.0-20221009165119-08e6815155c9/go.mod h1:mB0PqKoEqBNtn6kxlvjM/J+NXjHke6ztNSF0JrAtsoU=
 github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239/go.mod h1:2FmKhYUyUczH0OGQWaF5ceTx0UBShxjsH6f8oGKYe2c=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/apparentlymart/go-cidr v1.1.0/go.mod h1:EBcsNrHc3zQeuaeCeCtQruQm+n9/YjEn/vI25Lg7Gwc=

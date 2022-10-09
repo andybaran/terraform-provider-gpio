@@ -8,7 +8,7 @@ require (
 	cloud.google.com/go/storage v1.27.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/agl/ed25519 v0.0.0-20170116200512-5312a6153412 // indirect
-	github.com/andybaran/terragpio v0.0.0-20221009162400-dd3d502a9453
+	github.com/andybaran/terragpio v0.0.0-20221009165119-08e6815155c9 // indirect
 	github.com/aws/aws-sdk-go v1.44.114 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
