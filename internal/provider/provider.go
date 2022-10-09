@@ -43,7 +43,7 @@ func New(version string) func() *schema.Provider {
 			ResourcesMap: map[string]*schema.Resource{
 				"gpio_pwm":                     resource_gpio_pwm(),
 				"bme280":                       resource_bme280(),
-				"input-temperature_output-fan": resource_input_temperature_output_fan(),
+				"input_temperature_output_fan": resource_input_temperature_output_fan(),
 			},
 		}
 
