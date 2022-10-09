@@ -72,13 +72,13 @@ func resourceITemp_OFan_Create(ctx context.Context, d *schema.ResourceData, meta
 	var dutyCycleMin = d.Get("dutyCycleMin").(uint64)
 
 	client.MyClient.StartFanController(gpioclient.StartFanControllerArgs{
-		timeInterval:   timeInterval,
+		TimeInterval:   timeInterval,
 		BME280Device:   bme280DevicePin,
-		temperatureMax: temperatureMax,
-		temperatureMin: temperatureMin,
-		fanDevice:      fanDevice,
-		dutyCycleMax:   dutyCycleMax,
-		dutyCylceMin:   dutyCycleMin})
+		TemperatureMax: temperatureMax,
+		TemperatureMin: temperatureMin,
+		FanDevice:      fanDevice,
+		DutyCycleMax:   dutyCycleMax,
+		DutyCylceMin:   dutyCycleMin})
 
 	//	client.MyClient.SetPWM(client.MyClient(SetPWMArgs{Pin == pin, DutyCycle == dutycycle, Freq == freq}))
 
