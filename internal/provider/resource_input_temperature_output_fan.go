@@ -14,7 +14,7 @@ func resource_input_temperature_output_fan() *schema.Resource {
 
 		CreateContext: resource_input_temperature_output_fan_Create,
 		ReadContext:   resource_input_temperature_output_fan_Read,
-		UpdateContext: resource_input_temperature_output_fan_Update,
+		UpdateContext: resource_input_temperature_output_fan_Create, // Functionally the same as a create
 		DeleteContext: resource_input_temperature_output_fan_Delete,
 
 		Schema: map[string]*schema.Schema{
@@ -61,9 +61,6 @@ func resource_input_temperature_output_fan_Create(ctx context.Context, d *schema
 
 	client := meta.(*apiClient)
 
-	idFromAPI := "my-id"
-	d.SetId(idFromAPI)
-
 	var timeInterval = d.Get("timeInterval").(uint64)
 	var bme280DevicePin = d.Get("bme280DevicePin").(string)
 	var temperatureMax = d.Get("temperatureMax").(uint64)
@@ -71,6 +68,9 @@ func resource_input_temperature_output_fan_Create(ctx context.Context, d *schema
 	var dutyCycleMax = d.Get("dutyCycleMax").(uint64)
 	var dutyCycleMin = d.Get("dutyCycleMin").(uint64)
 	var fanDevice = d.Get("fanDevice").(string)
+
+	input_output_id := bme280DevicePin + "_" + fanDevice // Use the pins of the input device (BME280 sensor) and output device (PWM fan) to form our id
+	d.SetId(input_output_id)
 
 	client.MyClient.StartFanController(gpioclient.StartFanControllerArgs{
 		TimeInterval:    timeInterval,
@@ -87,13 +87,6 @@ func resource_input_temperature_output_fan_Create(ctx context.Context, d *schema
 }
 
 func resource_input_temperature_output_fan_Read(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
-
-	return diag.Errorf("not implemented")
-}
-
-func resource_input_temperature_output_fan_Update(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	// use the meta value to retrieve your client from the provider configure method
 	// client := meta.(*apiClient)
 
