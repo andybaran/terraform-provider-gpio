@@ -69,10 +69,7 @@ func resource_input_temperature_output_fan_Create(ctx context.Context, d *schema
 	var dutyCycleMin = d.Get("dutyCycleMin").(uint64)
 	var fanDevice = d.Get("fanDevice").(string)
 
-	input_output_id := bme280DevicePin + "_" + fanDevice // Use the pins of the input device (BME280 sensor) and output device (PWM fan) to form our id
-	d.SetId(input_output_id)
-
-	client.MyClient.StartFanController(gpioclient.StartFanControllerArgs{
+	resp, err := client.MyClient.StartFanController(gpioclient.StartFanControllerArgs{
 		TimeInterval:    timeInterval,
 		BME280DevicePin: bme280DevicePin,
 		TemperatureMax:  temperatureMax,
@@ -81,9 +78,13 @@ func resource_input_temperature_output_fan_Create(ctx context.Context, d *schema
 		DutyCycleMax:    dutyCycleMax,
 		DutyCylceMin:    dutyCycleMin})
 
-	//	client.MyClient.SetPWM(client.MyClient(SetPWMArgs{Pin == pin, DutyCycle == dutycycle, Freq == freq}))
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
-	return diag.Errorf("not implemented")
+	d.SetId(resp.PinCombo)
+	return diag.Errorf("Not really an error")
+
 }
 
 func resource_input_temperature_output_fan_Read(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {

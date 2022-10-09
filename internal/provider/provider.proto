@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-option go_package = "gpio/internal/provider";
+option go_package = "./gpio/internal/provider";
 
 package provider;
 
@@ -43,5 +43,5 @@ message FanControllerRequest {
 }
 
 message FanControllerResponse {
-
+    string pinCombo = 1;
 }
