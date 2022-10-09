@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceBME280() *schema.Resource {
+func resource_bme280() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource to setup BME280 i2c sensor",
 
@@ -19,13 +19,13 @@ func resourceBME280() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"I2CBus": {
 				// GPIO to be configured for PWM in GPIO standard format (i.e. GPIO6)
-				Description: "I2C Bus",
+				Description: "i2c Bus",
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
 			},
 			"I2CAddr": {
-				Description: "BME280 I2C address on bus",
+				Description: "bme280 i2c address on bus",
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,

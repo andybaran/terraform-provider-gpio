@@ -9,7 +9,7 @@ import (
 )
 
 
-func resourceInputTemperature_OutputFan() *schema.Resource {
+func resource_input_temperature_output_fan() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource to control PWM Pins",
 
