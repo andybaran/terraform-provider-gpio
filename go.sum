@@ -200,10 +200,6 @@ github.com/agl/ed25519 v0.0.0-20170116200512-5312a6153412/go.mod h1:WPjqKcmVOxf0
 github.com/alcortesm/tgz v0.0.0-20161220082320-9c5fe88206d7 h1:uSoVVbwJiQipAclBbw+8quDsfcvFjOpI5iCf4p/cqCs=
 github.com/alcortesm/tgz v0.0.0-20161220082320-9c5fe88206d7/go.mod h1:6zEj6s6u/ghQa61ZWa/C2Aw3RkjiTBOix7dkqa1VLIs=
 github.com/andybalholm/crlf v0.0.0-20171020200849-670099aa064f/go.mod h1:k8feO4+kXDxro6ErPXBRTJ/ro2mf0SsFG8s7doP9kJE=
-github.com/andybaran/fictional-goggles/terragpio v0.0.0-20220508130019-ea54b5fde97f h1:+XG9d2xf/Yhqf3+s8raFOSWpZW9BOx5HxtXmWFShVeI=
-github.com/andybaran/fictional-goggles/terragpio v0.0.0-20220508130019-ea54b5fde97f/go.mod h1:ErJbc0JCE5OSwVsA58MwMc/zDNy2kvSfDeZkGEd7cCk=
-github.com/andybaran/fictional-goggles/terragpio v0.0.0-20221009140520-9cebe9134086 h1:Qvs8DpeAWgg38CIaBLdrtk72cxlmvnu0eU6zSzUbQqw=
-github.com/andybaran/fictional-goggles/terragpio v0.0.0-20221009140520-9cebe9134086/go.mod h1:ErJbc0JCE5OSwVsA58MwMc/zDNy2kvSfDeZkGEd7cCk=
 github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239 h1:kFOfPq6dUM1hTo4JG6LR5AXSUEsOjtdm0kw0FtQtMJA=
 github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239/go.mod h1:2FmKhYUyUczH0OGQWaF5ceTx0UBShxjsH6f8oGKYe2c=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=

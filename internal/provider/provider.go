@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/grpc"
 
-	"github.com/andybaran/fictional-goggles/terragpio/gpioclient"
+	"github.com/andybaran/terragpio/gpioclient"
 )
 
 func init() {
