@@ -2,7 +2,9 @@ package provider
 
 import (
 	"context"
+	"strconv"
 
+	"github.com/andybaran/terragpio/gpioclient"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -55,8 +57,12 @@ func resourceBME280Create(ctx context.Context, d *schema.ResourceData, meta inte
 
 	var I2CBus = d.Get("I2CBus").(string)   //"1"
 	var I2CAddr = d.Get("I2CAddr").(string) //"0x77"
+	var I2CAddrUINT64, err = strconv.ParseUint(I2CAddr, 10, 64)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
-	resp, err = client.MyClient.SetBME280(gpioclient.setBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddr})
+	resp, err := client.MyClient.SetBME280(gpioclient.SetBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddrUINT64})
 	if err != nil {
 		return diag.FromErr(err)
 	}
