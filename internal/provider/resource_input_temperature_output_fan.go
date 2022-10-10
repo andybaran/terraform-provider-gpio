@@ -18,37 +18,37 @@ func resource_input_temperature_output_fan() *schema.Resource {
 		DeleteContext: resource_input_temperature_output_fan_Delete,
 
 		Schema: map[string]*schema.Schema{
-			"timeInterval": {
+			"timeinterval": {
 				Description: "How often to read the temperature and adjust the fan duty cycle (speed)",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"bme280DevicePin": {
+			"bme280devicepin": {
 				Description: "BME280 device to read temp from",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"temperatureMax": {
+			"temperaturemax": {
 				Description: "Max temperature (for calculating curve)",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"temperatureMin": {
+			"temperaturemin": {
 				Description: "Min temperature (for calculating curve)",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"fanDevice": {
+			"fandevice": {
 				Description: "fanDevice",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"dutyCycleMax": {
+			"dutycyclemax": {
 				Description: "Max fan duty cycle (for calculating curve)",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"dutyCycleMin": {
+			"dutycyclemin": {
 				Description: "Min fan duty cycle (for calculating curve)",
 				Type:        schema.TypeString,
 				Required:    true,
@@ -61,13 +61,13 @@ func resource_input_temperature_output_fan_Create(ctx context.Context, d *schema
 
 	client := meta.(*apiClient)
 
-	var timeInterval = d.Get("timeInterval").(uint64)
-	var bme280DevicePin = d.Get("bme280DevicePin").(string)
-	var temperatureMax = d.Get("temperatureMax").(uint64)
-	var temperatureMin = d.Get("temperatureMin").(uint64)
-	var dutyCycleMax = d.Get("dutyCycleMax").(uint64)
-	var dutyCycleMin = d.Get("dutyCycleMin").(uint64)
-	var fanDevice = d.Get("fanDevice").(string)
+	var timeInterval = d.Get("timeinterval").(uint64)
+	var bme280DevicePin = d.Get("bme280devicepin").(string)
+	var temperatureMax = d.Get("temperaturemax").(uint64)
+	var temperatureMin = d.Get("temperaturemin").(uint64)
+	var dutyCycleMax = d.Get("dutycyclemax").(uint64)
+	var dutyCycleMin = d.Get("dutycyclemin").(uint64)
+	var fanDevice = d.Get("fandevice").(string)
 
 	resp, err := client.MyClient.StartFanController(gpioclient.StartFanControllerArgs{
 		TimeInterval:    timeInterval,

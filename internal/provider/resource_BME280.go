@@ -19,30 +19,30 @@ func resource_bme280() *schema.Resource {
 		DeleteContext: resourceBME280Delete,
 
 		Schema: map[string]*schema.Schema{
-			"I2CBus": {
+			"i2cbus": {
 				// GPIO to be configured for PWM in GPIO standard format (i.e. GPIO6)
 				Description: "i2c Bus",
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
 			},
-			"I2CAddr": {
+			"i2caddr": {
 				Description: "bme280 i2c address on bus",
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
 			},
-			"Temperature": {
+			"temperature": {
 				Description: "Temperature sensed at time in 'Last_Sensed'",
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
-			"Humidity": {
+			"humidity": {
 				Description: "Humidity sensed at time in 'Last_Sensed'",
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
-			"Pressure": {
+			"pressure": {
 				Description: "Humidity sensed at time in 'Last_Sensed'",
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -55,8 +55,8 @@ func resourceBME280Create(ctx context.Context, d *schema.ResourceData, meta inte
 
 	client := meta.(*apiClient)
 
-	var I2CBus = d.Get("I2CBus").(string)   //"1"
-	var I2CAddr = d.Get("I2CAddr").(string) //"0x77"
+	var I2CBus = d.Get("i2cbus").(string)   //"1"
+	var I2CAddr = d.Get("i2caddr").(string) //"0x77"
 	var I2CAddrUINT64, err = strconv.ParseUint(I2CAddr, 10, 64)
 	if err != nil {
 		return diag.FromErr(err)

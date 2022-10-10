@@ -31,10 +31,10 @@ func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
 			Schema: map[string]*schema.Schema{
-				"serverAddr": &schema.Schema{
+				"serveraddr": &schema.Schema{
 					Type:        schema.TypeString,
 					Required:    true,
-					DefaultFunc: schema.EnvDefaultFunc("rpiaddr", nil),
+					DefaultFunc: schema.EnvDefaultFunc("serveraddr", nil),
 				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{
@@ -64,7 +64,7 @@ type apiClient struct {
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 
-		myClient, err := gpioclient.NewClient(p.Schema["serverAddr"].GoString())
+		myClient, err := gpioclient.NewClient(p.Schema["serveraddr"].GoString())
 		if err != nil {
 			log.Fatalf("can't connect to: %v", err)
 		}

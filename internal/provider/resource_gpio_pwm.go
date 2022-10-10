@@ -20,19 +20,19 @@ func resource_gpio_pwm() *schema.Resource {
 		DeleteContext: resourcePWMDelete,
 
 		Schema: map[string]*schema.Schema{
-			"Pin": {
+			"pin": {
 				// GPIO to be configured for PWM in GPIO standard format (i.e. GPIO6)
 				Description: "GPIO Pin",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"Dutycycle": {
+			"dutycycle": {
 				// Duty cycle for the PWM pin being configured as "nn%" where nn is 00 - 100
 				Description: "Duty cycle",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"Frequency": {
+			"frequency": {
 				// Frequency of the signal in the format "nM" where "n" is the numerical value and "M" is Megahertz
 				Description: "Frequency",
 				Type:        schema.TypeString,
