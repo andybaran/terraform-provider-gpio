@@ -15,7 +15,7 @@ func resource_bme280() *schema.Resource {
 
 		CreateContext: resourceBME280Create,
 		ReadContext:   resourceBME280Read,
-		UpdateContext: resourceBME280Create, // Functionally an Update is the same as a Create
+		//UpdateContext: resourceBME280Create, // Functionally an Update is the same as a Create
 		DeleteContext: resourceBME280Delete,
 
 		Schema: map[string]*schema.Schema{
