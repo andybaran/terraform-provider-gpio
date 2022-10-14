@@ -63,7 +63,7 @@ type apiClient struct {
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-
+		
 		myClient, err := gpioclient.NewClient(p.Schema["serveraddr"].GoString())
 		if err != nil {
 			log.Fatalf("can't connect to: %v", err)
