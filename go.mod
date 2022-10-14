@@ -7,10 +7,8 @@ require (
 	github.com/andybaran/terragpio v0.0.0-20221009173750-ceb5e218c10b
 	github.com/hashicorp/go-hclog v1.3.1 // indirect
 	github.com/hashicorp/go-plugin v1.4.5 // indirect
-	github.com/hashicorp/hcl/v2 v2.14.1 // indirect
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.23.0
-	github.com/hashicorp/terraform-provider-scaffolding v0.0.0-20220926120604-0a7282a2f3d3
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.0
 	github.com/hashicorp/yamux v0.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
