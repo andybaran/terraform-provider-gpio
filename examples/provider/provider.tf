@@ -1,5 +1,14 @@
+terraform {
+  required_providers {
+    gpio = {
+      source = "andy/gpio"
+      version = "0.0.1"
+    }
+  }
+}
+
 provider gpio {
-    ServerAddr = "10.15.21.124"
+    serveraddr = "10.15.21.124:1234"
 }
 
 resource "gpio_pwm" "my_fan" {
