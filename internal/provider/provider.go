@@ -66,17 +66,7 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		
 		myClient, err := gpioclient.NewClient(p.Schema["serveraddr"].GoString())
 		if err != nil {
-			log.Fatalf("can't connect to: %v", err)
-		}
-
-		//var diags diag.Diagnostics
-
-		var opts []grpc.DialOption
-		opts = append(opts, grpc.WithInsecure()) //not ready to worry about security just yet
-		opts = append(opts, grpc.WithBlock())    //we do this b/c we just want to fail immediately if we can't connect to the server https://pkg.go.dev/google.golang.org/grpc@v1.32.0?utm_source=gopls#WithBlock
-
-		if err != nil {
-			log.Fatalf("failed to dial: %v", err)
+			log.Fatalf("Can't connect to: %v", err)
 		}
 
 		return &myClient, nil
