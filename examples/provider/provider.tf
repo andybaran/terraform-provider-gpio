@@ -18,16 +18,16 @@ resource "gpio_pwm" "my_fan" {
 } 
 
 resource "gpio_bme280" "my_bme280" {
-    i2c_bus = "1"
-    i2c_addr = "0x77"
+    i2cbus = "1"
+    i2caddr = "0x77"
 } 
 
 resource "gpio_input_temperature_output_fan" "my_fan_controller" {
-    time_interval = 5
-    bme280_id = gpio_bme280.my_bme280.id 
-    temp_max  = 100
-    temp_min = 15
-    fan_id = gpio_pwm.my_fan.id
-    duty_max = 100
-    duty_min = 10
+    timeinterval = 5
+    bme280devicepin = gpio_bme280.my_bme280.id 
+    temperaturemax  = 100
+    temperaturemin = 15
+    fandevice = gpio_pwm.my_fan.id
+    dutycyclemax = 100
+    dutycyclemin = 10
 }

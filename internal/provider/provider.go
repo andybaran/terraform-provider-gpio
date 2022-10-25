@@ -2,11 +2,13 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"google.golang.org/grpc"
+
+	//"google.golang.org/grpc"
 
 	"github.com/andybaran/terragpio/gpioclient"
 )
@@ -63,7 +65,7 @@ type apiClient struct {
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-		
+		fmt.Println("running configure func")
 		myClient, err := gpioclient.NewClient(p.Schema["serveraddr"].GoString())
 		if err != nil {
 			log.Fatalf("Can't connect to: %v", err)
