@@ -71,6 +71,9 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			log.Fatalf("Can't connect to: %v", err)
 		}
 
-		return &myClient, nil
+		return &apiClient{
+			MyClient:   *myClient,
+			ServerAddr: p.Schema["serveraddr"].GoString(),
+		}, nil
 	}
 }
