@@ -2,8 +2,6 @@ package provider
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -56,24 +54,28 @@ func New(version string) func() *schema.Provider {
 }
 
 type apiClient struct {
-	// Add whatever fields, client or connection info, etc. here
-	// you would need to setup to communicate with the upstream
-	// API.
 	MyClient   gpioclient.Client
-	ServerAddr string
+	ServerAddr string //TODO: Why am I passing this around? This is likely not needed
+
 }
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-		fmt.Println("running configure func")
+
+		var diags diag.Diagnostics
+
 		myClient, err := gpioclient.NewClient(p.Schema["serveraddr"].GoString())
 		if err != nil {
-			log.Fatalf("Can't connect to: %v", err)
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "Unable to connect to the server",
+				Detail:   "Unable to connect to the server address as specified",
+			})
 		}
 
 		return &apiClient{
 			MyClient:   *myClient,
 			ServerAddr: p.Schema["serveraddr"].GoString(),
-		}, nil
+		}, diags
 	}
 }

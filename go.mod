@@ -23,4 +23,4 @@ require (
 	google.golang.org/protobuf v1.28.1
 )
 
-replace github.com/andybaran/terragpio => /Users/andy/Documents/code/mentorship/terragpio
+replace github.com/andybaran/terragpio => ../terragpio
