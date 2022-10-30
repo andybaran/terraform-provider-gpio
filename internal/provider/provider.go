@@ -53,11 +53,11 @@ func New(version string) func() *schema.Provider {
 	}
 }
 
-type apiClient struct {
+/*type apiClient struct {
 	MyClient   gpioclient.Client
 	ServerAddr string //TODO: Why am I passing this around? This is likely not needed
 
-}
+}*/
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
@@ -73,9 +73,6 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			})
 		}
 
-		return &apiClient{
-			MyClient:   *myClient,
-			ServerAddr: p.Schema["serveraddr"].GoString(),
-		}, diags
+		return *myClient, diags
 	}
 }
