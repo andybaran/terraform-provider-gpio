@@ -17,6 +17,7 @@ resource "gpio_pwm" "my_fan" {
     frequency = 25000
 } 
 
+/*
 resource "gpio_bme280" "my_bme280" {
     i2cbus = "1"
     i2caddr = "0x77"
@@ -31,3 +32,4 @@ resource "gpio_input_temperature_output_fan" "my_fan_controller" {
     dutycyclemax = 100
     dutycyclemin = 10
 }
+*/

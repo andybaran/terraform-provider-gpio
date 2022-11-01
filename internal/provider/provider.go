@@ -6,8 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	//"google.golang.org/grpc"
-
 	"github.com/andybaran/terragpio/gpioclient"
 )
 
@@ -53,18 +51,14 @@ func New(version string) func() *schema.Provider {
 	}
 }
 
-/*type apiClient struct {
-	MyClient   gpioclient.Client
-	ServerAddr string //TODO: Why am I passing this around? This is likely not needed
-
-}*/
+type gpioapiclient struct {
+	c *gpioclient.Client
+}
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-
 		var diags diag.Diagnostics
-
-		myClient, err := gpioclient.NewClient(p.Schema["serveraddr"].GoString())
+		c, err := gpioclient.NewClient(p.Schema["serveraddr"].GoString())
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
@@ -73,6 +67,6 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			})
 		}
 
-		return *myClient, diags
+		return gpioapiclient{c: c}, diags
 	}
 }

@@ -43,14 +43,13 @@ func resource_gpio_pwm() *schema.Resource {
 }
 
 func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	client := meta.(gpioapiclient)
 
-	client := meta.(*apiClient)
+	var pin = d.Get("pin").(string)             //Example: "GPIO12"
+	var dutycycle = d.Get("dutycycle").(string) //Example: "100%"
+	var freq = d.Get("frequency").(string)      //Example: "25000"
 
-	var pin = d.Get("Pin").(string)             //Example: "GPIO12"
-	var dutycycle = d.Get("Dutycycle").(string) //Example: "100%"
-	var freq = d.Get("Frequency").(string)      //Example: "25000"
-
-	resp, err := client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
+	resp, err := client.c.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -67,13 +66,13 @@ func resourcePWMRead(ctx context.Context, d *schema.ResourceData, meta interface
 
 func resourcePWMDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 
-	client := meta.(*apiClient)
+	client := meta.(*gpioclient.Client)
 
 	var pin = d.Get("Pin").(string) //Example: "GPIO12"
 	var dutycycle = "0%"
 	var freq = "0"
 
-	resp, err := client.MyClient.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
+	resp, err := client.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -59,7 +59,7 @@ func resource_input_temperature_output_fan() *schema.Resource {
 
 func resource_input_temperature_output_fan_Create(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 
-	client := meta.(*apiClient)
+	client := meta.(*gpioclient.Client)
 
 	var timeInterval = d.Get("timeinterval").(uint64)
 	var bme280DevicePin = d.Get("bme280devicepin").(string)
@@ -69,7 +69,7 @@ func resource_input_temperature_output_fan_Create(ctx context.Context, d *schema
 	var dutyCycleMin = d.Get("dutycyclemin").(uint64)
 	var fanDevice = d.Get("fandevice").(string)
 
-	resp, err := client.MyClient.StartFanController(gpioclient.StartFanControllerArgs{
+	resp, err := client.StartFanController(gpioclient.StartFanControllerArgs{
 		TimeInterval:    timeInterval,
 		BME280DevicePin: bme280DevicePin,
 		TemperatureMax:  temperatureMax,
