@@ -25,13 +25,14 @@ func init() {
 	// }
 }
 
-func New(version string) func() *schema.Provider {
+func New(version string, client gpioapiclient) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
 			Schema: map[string]*schema.Schema{
 				"serveraddr": &schema.Schema{
-					Type:        schema.TypeString,
-					Required:    true,
+					Type:     schema.TypeString,
+					Optional: true,
+					//Required:    true,
 					DefaultFunc: schema.EnvDefaultFunc("serveraddr", nil),
 				},
 			},
@@ -45,7 +46,7 @@ func New(version string) func() *schema.Provider {
 			},
 		}
 
-		p.ConfigureContextFunc = configure(version, p)
+		p.ConfigureContextFunc = configure(version, p, client)
 
 		return p
 	}
@@ -55,7 +56,7 @@ type gpioapiclient struct {
 	c *gpioclient.Client
 }
 
-func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
+func configure(version string, p *schema.Provider, client *gpioapiclient) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 		var diags diag.Diagnostics
 		c, err := gpioclient.NewClient(p.Schema["serveraddr"].GoString())

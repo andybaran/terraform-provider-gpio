@@ -8,7 +8,7 @@ terraform {
 }
 
 provider gpio {
-    serveraddr = "10.15.21.124:1234"
+    serveraddr = "localhost:1234"
 }
 
 resource "gpio_pwm" "my_fan" {
