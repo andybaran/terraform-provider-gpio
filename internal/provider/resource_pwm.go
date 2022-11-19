@@ -9,7 +9,7 @@ import (
 )
 
 // TODO: Lean how to use Diagnostics so I can return a Diagnostics of type INFO or equivalent
-func resource_gpio_pwm() *schema.Resource {
+func resource_pwm() *schema.Resource {
 	return &schema.Resource{
 		// This description is used by the documentation generator and the language server.
 		Description: "Resource to control PWM Pins",

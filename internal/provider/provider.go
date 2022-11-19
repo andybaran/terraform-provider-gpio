@@ -36,10 +36,10 @@ func New(version string) func() *schema.Provider {
 				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{
-				"gpio_scaffolding_data_source": dataSourceScaffolding(),
+				//"gpio_scaffolding_data_source": dataSourceScaffolding(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"gpio_pwm":                          resource_gpio_pwm(),
+				"gpio_pwm":                          resource_pwm(),
 				"gpio_bme280":                       resource_bme280(),
 				"gpio_input_temperature_output_fan": resource_input_temperature_output_fan(),
 			},
