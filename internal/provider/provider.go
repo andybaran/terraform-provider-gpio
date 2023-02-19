@@ -65,7 +65,6 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 				Detail:   "Unable to connect to the server address as specified",
 			})
 		}
-
 		return gpioapiclient{c: c}, diags
 	}
 }
