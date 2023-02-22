@@ -8,23 +8,55 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func init() {
-	// Set descriptions to support markdown syntax, this will be used in document generation
-	// and the language server.
-	schema.DescriptionKind = schema.StringMarkdown
-
-	// Customize the content of descriptions when output. For example you can add defaults on
-	// to the exported descriptions if present.
-	// schema.SchemaDescriptionBuilder = func(s *schema.Schema) string {
-	// 	desc := s.Description
-	// 	if s.Default != nil {
-	// 		desc += fmt.Sprintf(" Defaults to `%v`.", s.Default)
-	// 	}
-	// 	return strings.TrimSpace(desc)
-	// }
+type gpioapiclient struct {
+	c *gpioclient.Client
 }
 
-func New(version string) func() *schema.Provider {
+var _ provider.Provider = (*gpioProvider)(nil)
+
+func New() provider.Provider {
+    return &gpioProvider{}
+}
+
+func (p *gpioProvider) Resources(_ context.Context) []func() resource.Resource {
+    return []func() resource.Resource{
+        func() resource.Resource {
+            return &gpio_pwmResource{}
+        },
+		func() resource.Resource {
+            return &gpio_bme280Resource{}
+        },
+		func() resource.Resource {
+            return &gpio_input_temperature_output_fanResource{}
+        },
+        /* ... */
+    }
+}
+
+func (p *gpioProvider) DataSources(_ context.Context) []func() datasource.DataSource {
+    return []func() datasource.DataSource{
+        func() datasource.DataSource {
+            return &exampleDataSource{},
+        },
+        /* ... */
+    }
+}
+
+func (p *gpioProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
+    resp.Schema = schema.Schema{
+        Attributes: map[string]schema.Attribute{
+            "serveraddr": schema.StringAttribute{
+                Required: true,
+            },
+        },
+    }
+}
+
+func (p *gpioProvider) Configure(ctx context.Context, req provider.ConfigureRequest, res *provider.ConfigureResponse) {
+    /* ... */
+}
+
+/*func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
 			Schema: map[string]*schema.Schema{
@@ -50,9 +82,7 @@ func New(version string) func() *schema.Provider {
 	}
 }
 
-type gpioapiclient struct {
-	c *gpioclient.Client
-}
+
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
@@ -67,4 +97,4 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		}
 		return gpioapiclient{c: c}, diags
 	}
-}
+}*/
