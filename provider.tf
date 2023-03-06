@@ -13,7 +13,7 @@ provider gpio {
 
 resource "gpio_pwm" "my_fan" {
     pin = "GPIO13"
-    dutycycle = "10%"
+    dutycycle = "100%"
     frequency = 25000
 } 
 

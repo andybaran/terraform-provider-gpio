@@ -56,7 +56,7 @@ func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 
 	d.SetId(resp.PinNumber)
 
-	return diag.Errorf("Not really an error")
+	return nil
 }
 
 func resourcePWMRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -79,5 +79,5 @@ func resourcePWMDelete(ctx context.Context, d *schema.ResourceData, meta interfa
 
 	d.SetId(resp.PinNumber)
 
-	return diag.Errorf("Not really an error")
+	return nil
 }

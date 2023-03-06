@@ -55,9 +55,10 @@ type gpioapiclient struct {
 }
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
+	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 		var diags diag.Diagnostics
-		c, err := gpioclient.NewClient(p.Schema["serveraddr"].GoString())
+		serveraddr := d.Get("serveraddr").(string)
+		c, err := gpioclient.NewClient(serveraddr)
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
