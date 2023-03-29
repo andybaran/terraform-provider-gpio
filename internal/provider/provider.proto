@@ -11,6 +11,7 @@ service setgpio {
     rpc SetPWM(PWMRequest) returns(PinSetResponse) {}
     rpc SetBME280(BME280Request) returns(PinSetResponse) {}
     rpc PWMDutyCycleOutput_BME280TempInput(FanControllerRequest) returns(FanControllerResponse) {}
+    rpc ReadPWM
 }
 
 message PinSetResponse {

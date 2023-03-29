@@ -61,7 +61,14 @@ func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 
 func resourcePWMRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 
-	return diag.Errorf("not implemented")
+	client := meta.(*gpioapiclient)
+
+	dutycycle, frequency := client.c.SensePWM(d.Get("pin").(string))
+
+	d.Set("dutycycle", dutycycle)
+	d.Set("frequency", frequency)
+
+	return nil
 }
 
 func resourcePWMDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
