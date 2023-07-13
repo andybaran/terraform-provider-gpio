@@ -1,3 +1,11 @@
+# Current State Notes
+This provider currently uses the Terraform SDK and should be migrated to the plug-in framework. 
+
+This provider can be tested using the TF files in examples/provider. This folder also contains a .terraformrc to aid in local development line 4 should be changed to the path where you've compiled the provider.  The .terraformrc needs to be in your home directory. 
+
+---
+
+
 How will provider be used?
 
 We setup a temperature probe and a fan that reacts to it.
