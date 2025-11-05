@@ -10,9 +10,9 @@ We setup a temperature probe and a fan that reacts to it.
 Terraform resource id (used internally) is equal to the pin attribute.
 
 ## Attributes
-- pin
-- dutycycle
-- frequency
+- pin (string)
+- dutycycle (string like "75%")
+- frequency (string Hz, e.g. "25000")
 
 ## Example Usage
 
@@ -20,7 +20,7 @@ Terraform resource id (used internally) is equal to the pin attribute.
 resource "gpio_pwm" "my_fan" {
     pin = "GPIO13"
     dutycycle = "10%"
-    frequency = 25000
+    frequency = "25000"
 } 
 ```
 
@@ -28,15 +28,15 @@ resource "gpio_pwm" "my_fan" {
 Terraform resource id (used internally) is concantenation of I2C Bus and device address of the connected BME280 device.
 
 ## Attributes
-- i2c_bus
-- i2c_addr
+- i2cbus (string)
+- i2caddr (string like "0x77")
 
 ## Example Usage
 
 ```hcl
 resource "gpio_bme280" "my_bme280" {
-    i2c_bus = "1"
-    i2c_addr = "0x77"
+    i2cbus = "1"
+    i2caddr = "0x77"
 } 
 ```
 
@@ -46,13 +46,13 @@ Terraform resource id (used internally) is concatentation of id's from resource_
 The fans speed is determined by it's duty cycle.  In order to set it's duty cycle in relation to the measured temperature we need to plot it on a graph whose X axis is the range of temperatureMin and temperatureMax and Y axis is dutycycleMin and dutyCycleMax.
 
 ## Attributes
-- time_interval : int specifying how often (in seconds) to check the temperature and adjust the fan dutycycle (ie: speed)
-- bme280_id : the BME280 device to use (this should be from an attribute of resource_bme280)
-- temp_max : the max (in celsius) temperature to use for dutycycle calculation
-- temp_min : the min (in celsius) temperature to use for dutycycle calculation
-- fan_id : the pwm based fan device to use (this should be from an attribute of resource_pwm)
-- duty_max : the max (in percent) dutycycle to use
-- duty_min : the min (in percent) dutycycle to use
+- timeinterval (string seconds) how often to check and adjust
+- bme280devicepin (string) ID from gpio_bme280 resource
+- temperaturemax (string) max Celsius for curve
+- temperaturemin (string) min Celsius for curve
+- fandevice (string) ID from gpio_pwm resource
+- dutycyclemax (string) max duty cycle percent
+- dutycyclemin (string) min duty cycle percent
 
 ## Example Usage
 
@@ -60,21 +60,21 @@ The fans speed is determined by it's duty cycle.  In order to set it's duty cycl
 resource "gpio_pwm" "my_fan" {
     pin = "GPIO13"
     dutycycle = "10%"
-    frequency = 25000
+    frequency = "25000"
 } 
 
 resource "gpio_bme280" "my_bme280" {
-    i2c_bus = "1"
-    i2c_addr = "0x77"
+    i2cbus = "1"
+    i2caddr = "0x77"
 } 
 
 resource "gpio_input_temperature_output_fan" "my_fan_controller" {
-    time_interval = 5
-    bme280_id = gpio_bme280.my_bme280.id 
-    temp_max  = 100
-    temp_min = 15
-    fan_id = gpio_pwm.my_fan.id
-    duty_max = 100
-    duty_min = 10
+    timeinterval = "5"
+    bme280devicepin = gpio_bme280.my_bme280.id 
+    temperaturemax  = "100"
+    temperaturemin = "15"
+    fandevice = gpio_pwm.my_fan.id
+    dutycyclemax = "100"
+    dutycyclemin = "10"
 }
 ```

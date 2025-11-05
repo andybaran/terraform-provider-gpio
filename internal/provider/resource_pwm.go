@@ -4,80 +4,145 @@ import (
 	"context"
 
 	"github.com/andybaran/terragpio/gpioclient"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-// TODO: Lean how to use Diagnostics so I can return a Diagnostics of type INFO or equivalent
-func resource_pwm() *schema.Resource {
-	return &schema.Resource{
-		// This description is used by the documentation generator and the language server.
+// Ensure the resource implements required interfaces
+var _ resource.Resource = (*pwmResource)(nil)
+var _ resource.ResourceWithConfigure = (*pwmResource)(nil)
+
+type pwmResource struct {
+	client *gpioclient.Client
+}
+
+type pwmModel struct {
+	ID        types.String `tfsdk:"id"`
+	Pin       types.String `tfsdk:"pin"`
+	DutyCycle types.String `tfsdk:"dutycycle"`
+	Frequency types.String `tfsdk:"frequency"`
+}
+
+func NewPWMResource() resource.Resource { return &pwmResource{} }
+
+func (r *pwmResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = "gpio_pwm"
+}
+
+func (r *pwmResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
 		Description: "Resource to control PWM Pins",
-
-		CreateContext: resourcePWMCreate,
-		ReadContext:   resourcePWMRead,
-		UpdateContext: resourcePWMCreate, // Functionally an Update is the same as a Create
-		DeleteContext: resourcePWMDelete,
-
-		Schema: map[string]*schema.Schema{
-			"pin": {
-				// GPIO to be configured for PWM in GPIO standard format (i.e. GPIO6)
-				Description: "GPIO Pin",
-				Type:        schema.TypeString,
-				Required:    true,
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: "Internal identifier (pin number)",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
-			"dutycycle": {
-				// Duty cycle for the PWM pin being configured as "nn%" where nn is 00 - 100
-				Description: "Duty cycle",
-				Type:        schema.TypeString,
+			"pin": schema.StringAttribute{
 				Required:    true,
+				Description: "GPIO Pin (e.g. GPIO12)",
 			},
-			"frequency": {
-				// Frequency of the signal in the format "nM" where "n" is the numerical value and "M" is Megahertz
-				Description: "Frequency",
-				Type:        schema.TypeString,
+			"dutycycle": schema.StringAttribute{
 				Required:    true,
+				Description: "Duty cycle (e.g. 75%)",
+			},
+			"frequency": schema.StringAttribute{
+				Required:    true,
+				Description: "Frequency in Hz (e.g. 25000)",
 			},
 		},
 	}
 }
 
-func resourcePWMCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(gpioapiclient)
-
-	var pin = d.Get("pin").(string)             //Example: "GPIO12"
-	var dutycycle = d.Get("dutycycle").(string) //Example: "100%"
-	var freq = d.Get("frequency").(string)      //Example: "25000"
-
-	resp, err := client.c.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
-	if err != nil {
-		return diag.FromErr(err)
+func (r *pwmResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+	if req.ProviderData == nil {
+		return
 	}
-
-	d.SetId(resp.PinNumber)
-
-	return diag.Errorf("Not really an error")
+	if c, ok := req.ProviderData.(*gpioclient.Client); ok {
+		r.client = c
+	}
 }
 
-func resourcePWMRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-
-	return diag.Errorf("not implemented")
-}
-
-func resourcePWMDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-
-	client := meta.(*gpioclient.Client)
-
-	var pin = d.Get("Pin").(string) //Example: "GPIO12"
-	var dutycycle = "0%"
-	var freq = "0"
-
-	resp, err := client.SetPWM(gpioclient.SetPWMArgs{Pin: pin, DutyCycle: dutycycle, Freq: freq})
-	if err != nil {
-		return diag.FromErr(err)
+func (r *pwmResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan pwmModel
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
-	d.SetId(resp.PinNumber)
+	apiResp, err := r.client.SetPWM(gpioclient.SetPWMArgs{
+		Pin:       plan.Pin.ValueString(),
+		DutyCycle: plan.DutyCycle.ValueString(),
+		Freq:      plan.Frequency.ValueString(),
+	})
+	if err != nil {
+		resp.Diagnostics.AddError("PWM create failed", err.Error())
+		return
+	}
 
-	return diag.Errorf("Not really an error")
+	plan.ID = types.StringValue(apiResp.PinNumber)
+
+	diags = resp.State.Set(ctx, plan)
+	resp.Diagnostics.Append(diags...)
+}
+
+func (r *pwmResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// No read RPC is available; keep state
+	var state pwmModel
+	diags := req.State.Get(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	// Nothing to refresh currently
+	diags = resp.State.Set(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+}
+
+func (r *pwmResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan pwmModel
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	_, err := r.client.SetPWM(gpioclient.SetPWMArgs{
+		Pin:       plan.Pin.ValueString(),
+		DutyCycle: plan.DutyCycle.ValueString(),
+		Freq:      plan.Frequency.ValueString(),
+	})
+	if err != nil {
+		resp.Diagnostics.AddError("PWM update failed", err.Error())
+		return
+	}
+
+	diags = resp.State.Set(ctx, plan)
+	resp.Diagnostics.Append(diags...)
+}
+
+func (r *pwmResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state pwmModel
+	diags := req.State.Get(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Set PWM to 0 to effectively disable
+	_, err := r.client.SetPWM(gpioclient.SetPWMArgs{
+		Pin:       state.Pin.ValueString(),
+		DutyCycle: "0%",
+		Freq:      "0",
+	})
+	if err != nil {
+		resp.Diagnostics.AddError("PWM delete failed", err.Error())
+		return
+	}
 }

@@ -20,7 +20,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "andy/gpio",
+		Address: "registry.terraform.io/andy/gpio",
 		Debug:   debug,
 	}
 

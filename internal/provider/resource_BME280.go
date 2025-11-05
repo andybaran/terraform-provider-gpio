@@ -4,78 +4,112 @@ import (
 	"context"
 
 	"github.com/andybaran/terragpio/gpioclient"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func resource_bme280() *schema.Resource {
-	return &schema.Resource{
+var _ resource.Resource = (*bme280Resource)(nil)
+var _ resource.ResourceWithConfigure = (*bme280Resource)(nil)
+
+type bme280Resource struct{ client *gpioclient.Client }
+
+type bme280Model struct {
+	ID      types.String `tfsdk:"id"`
+	I2CBus  types.String `tfsdk:"i2cbus"`
+	I2CAddr types.String `tfsdk:"i2caddr"`
+}
+
+func NewBME280Resource() resource.Resource { return &bme280Resource{} }
+
+func (r *bme280Resource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = "gpio_bme280"
+}
+
+func (r *bme280Resource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
 		Description: "Resource to setup BME280 i2c sensor",
-
-		CreateContext: resourceBME280Create,
-		ReadContext:   resourceBME280Read,
-		//UpdateContext: resourceBME280Create, // Functionally an Update is the same as a Create
-		DeleteContext: resourceBME280Delete,
-
-		Schema: map[string]*schema.Schema{
-			"i2cbus": {
-				// GPIO to be configured for PWM in GPIO standard format (i.e. GPIO6)
-				Description: "i2c Bus",
-				Type:        schema.TypeString,
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: "Internal identifier",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"i2cbus": schema.StringAttribute{
 				Required:    true,
-				ForceNew:    true,
+				Description: "i2c bus number (e.g. 1)",
 			},
-			"i2caddr": {
-				Description: "bme280 i2c address on bus",
-				Type:        schema.TypeString,
+			"i2caddr": schema.StringAttribute{
 				Required:    true,
-				ForceNew:    true,
-			},
-			"temperature": {
-				Description: "Temperature sensed at time in 'Last_Sensed'",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
-			"humidity": {
-				Description: "Humidity sensed at time in 'Last_Sensed'",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
-			"pressure": {
-				Description: "Humidity sensed at time in 'Last_Sensed'",
-				Type:        schema.TypeString,
-				Computed:    true,
+				Description: "i2c address (e.g. 0x77)",
 			},
 		},
 	}
 }
 
-func resourceBME280Create(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func (r *bme280Resource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+	if req.ProviderData == nil {
+		return
+	}
+	if c, ok := req.ProviderData.(*gpioclient.Client); ok {
+		r.client = c
+	}
+}
 
-	client := meta.(gpioapiclient)
-
-	var I2CBus = d.Get("i2cbus").(string)   //"1"
-	var I2CAddr = d.Get("i2caddr").(string) //"0x77"
-	/*var I2CAddrUINT64, err = strconv.ParseUint(I2CAddr, 10, 64)
-	if err != nil {
-		return diag.FromErr(err)
-	}*/
-
-	resp, err := client.c.SetBME280(gpioclient.SetBME280Args{I2CBus: I2CBus, I2CAddr: I2CAddr})
-	if err != nil {
-		return diag.FromErr(err)
+func (r *bme280Resource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan bme280Model
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
-	d.SetId(resp.PinNumber)
+	apiResp, err := r.client.SetBME280(gpioclient.SetBME280Args{I2CBus: plan.I2CBus.ValueString(), I2CAddr: plan.I2CAddr.ValueString()})
+	if err != nil {
+		resp.Diagnostics.AddError("BME280 setup failed", err.Error())
+		return
+	}
 
-	return diag.Errorf("Not really an error")
+	plan.ID = types.StringValue(apiResp.PinNumber)
 
+	diags = resp.State.Set(ctx, plan)
+	resp.Diagnostics.Append(diags...)
 }
 
-func resourceBME280Read(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	return diag.Errorf("not implemented")
+func (r *bme280Resource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state bme280Model
+	diags := req.State.Get(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	// No read available; keep state
+	diags = resp.State.Set(ctx, &state)
+	resp.Diagnostics.Append(diags...)
 }
 
-func resourceBME280Delete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	return diag.Errorf("not implemented")
+func (r *bme280Resource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	// Treat as replace/update via same RPC
+	var plan bme280Model
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	_, err := r.client.SetBME280(gpioclient.SetBME280Args{I2CBus: plan.I2CBus.ValueString(), I2CAddr: plan.I2CAddr.ValueString()})
+	if err != nil {
+		resp.Diagnostics.AddError("BME280 update failed", err.Error())
+		return
+	}
+	diags = resp.State.Set(ctx, plan)
+	resp.Diagnostics.Append(diags...)
+}
+
+func (r *bme280Resource) Delete(context.Context, resource.DeleteRequest, *resource.DeleteResponse) {
+	// No-op; server may not support teardown
 }
